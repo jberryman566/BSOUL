@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC3504A2204793CB00085B4F /* workoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3504A1204793CB00085B4F /* workoutViewController.swift */; };
 		BCA0BC412040B19D00A48CFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA0BC402040B19D00A48CFA /* AppDelegate.swift */; };
 		BCA0BC432040B19D00A48CFA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA0BC422040B19D00A48CFA /* ViewController.swift */; };
 		BCA0BC462040B19D00A48CFA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BCA0BC442040B19D00A48CFA /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BC3504A1204793CB00085B4F /* workoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = workoutViewController.swift; path = ../workoutViewController.swift; sourceTree = "<group>"; };
 		BCA0BC3D2040B19D00A48CFA /* BSOUL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BSOUL.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCA0BC402040B19D00A48CFA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCA0BC422040B19D00A48CFA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 		BCA0BC3F2040B19D00A48CFA /* BSOUL */ = {
 			isa = PBXGroup;
 			children = (
+				BC3504A1204793CB00085B4F /* workoutViewController.swift */,
 				BCA0BC402040B19D00A48CFA /* AppDelegate.swift */,
 				BCA0BC422040B19D00A48CFA /* ViewController.swift */,
 				BCA0BC442040B19D00A48CFA /* Main.storyboard */,
@@ -261,6 +264,7 @@
 			files = (
 				BCA0BC432040B19D00A48CFA /* ViewController.swift in Sources */,
 				BCA0BC412040B19D00A48CFA /* AppDelegate.swift in Sources */,
+				BC3504A2204793CB00085B4F /* workoutViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

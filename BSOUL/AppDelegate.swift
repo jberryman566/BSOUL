@@ -12,12 +12,44 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //let notification = launchOptions![UIApplicationLaunchOptionsKey.remoteNotification]
+        
+        
+        if (application.applicationState == UIApplicationState.inactive) {
+            loadWorkout()
+        }
+        
         return true
     }
+
+    
+    func loadWorkout() {
+        
+        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let appVC = storyBoard.instantiateViewController(withIdentifier: "WorkoutViewController")
+        let navigationController = UINavigationController.init(rootViewController: appVC)
+        self.window?.rootViewController = navigationController
+        self.window?.makeKeyAndVisible()
+        
+        
+    }
+    
+    /*
+    private func application(_ application: UIApplication, didRecieveLocalNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult)) {
+        
+        if (application.applicationState == UIApplicationState.inactive) {
+            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let appVC = storyBoard.instantiateViewController(withIdentifier: "WorkoutViewController")
+            let navigationController = UINavigationController.init(rootViewController: appVC)
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
+        }
+        
+    }
+    */
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -31,6 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

@@ -11,22 +11,71 @@ import UserNotifications
 
 class ViewController: UIViewController {
     
+    struct Notification {
+        
+        struct Category {
+            static let tutorial = "tutorial"
+        }
+        
+        struct Action {
+            static let readLater = "readLater"
+        }
+    }
+    
     //MARK: PROPERTIES
     
+    @IBOutlet weak var nextSetWorkout: UILabel!
     @IBOutlet weak var nextWorkout: UIDatePicker!
     @IBOutlet weak var mainImage: UIImageView!
     @IBOutlet weak var bsoulLevel: UILabel!
     @IBOutlet weak var bsoulProgress: UIProgressView!
+    //var isSet: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //if(nextWorkout.date <= Date()) {
+            //nextSetWorkout.text = "No Workout Set!"
+            //isSet = false
+        //}
+        
+        if (nextSetWorkout.text == "NULL") {
+            nextSetWorkout.text = "No Workout Set!"
+        }
         // Do any additional setup after loading the view, typically from a nib.
+ 
+        //configureUserNotificationCenter()
         // set this up so user selects image from their library (ie. profile picture)
         mainImage.image = UIImage(named: "success")
-
-        print(Date())
+        //print(Date())
+        
     }
-
+    /*
+    private func configureUserNotificationCenter() {
+        UNUserNotificationCenter.current().delegate = self
+        
+        let actionReadLater = UNNotificationAction(identifier: Notification.Action.readLater, title: "Read Later", options: [])
+        
+        let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.tutorial, actions: [actionReadLater], intentIdentifiers: [], options: [])
+        
+        UNUserNotificationCenter.current().setNotificationCategories([tutorialCategory])
+        
+    }
+    */
+    /*
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didRecieve response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        switch response.actionIdentifier {
+            
+        case Notification.Action.readLater:
+            print("we are here after notification")
+        
+        default:
+            print("Why am i here all day")
+    
+        }
+    }
+*/
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -35,35 +84,9 @@ class ViewController: UIViewController {
     @IBAction func setWorkout() {
         
         let selectedDate = nextWorkout.date
+        dateHasBeenSet(at: selectedDate)
         scheduleNotification(at: selectedDate)
-        /*
-        //testttttt
-        //this works. Need to adjust the date to a date selector the user picks (ie. pick next workout)
-        let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in }
-        let content = UNMutableNotificationContent()
-        
-        content.title = NSString.localizedUserNotificationString(forKey:
-            "Hey There!", arguments: nil)
-        content.body = NSString.localizedUserNotificationString(forKey:
-            "Its Time to Get BSOUL", arguments: nil)
-        
-        // Deliver the notification in 60 seconds and repeat it
-        content.sound = UNNotificationSound.default()
-        //Set trigger to a date picker
-        //let date = nextWorkout.date
-        
-        let calendar = nextWorkout.calendar
-        let components = calendar?.dateComponents(in: .current, from: Date())
-        let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components?.month, day: components?.day, hour: components?.hour, minute: components?.minute)
-        print(newComponents)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
-        //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60,
-        //                                                repeats: true)
-        // Schedule the notification.
-        let request = UNNotificationRequest(identifier: "60_seconds", content: content, trigger: trigger)
-        center.add(request, withCompletionHandler: nil)
-     */
+
     }
     
     func scheduleNotification(at date: Date) {
@@ -75,8 +98,9 @@ class ViewController: UIViewController {
         let trigger = UNCalendarNotificationTrigger(dateMatching: newComponents, repeats: false)
         
         let content = UNMutableNotificationContent()
-        content.title = "Tutorial Reminder"
-        content.body = "Just a reminder to read your tutorial over at appcoda.com!"
+        content.title = "Hey its BSOUL!"
+        content.body = "Its Time to Workout!"
+        //content.categoryIdentifier = Notification.Category.tutorial
         content.sound = UNNotificationSound.default()
         
         let request = UNNotificationRequest(identifier: "textNotification", content: content, trigger: trigger)
@@ -88,5 +112,32 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    func dateHasBeenSet(at date: Date) {
+        
+        //let calendar = Calendar(identifier: .gregorian)
+        //let components = calendar.dateComponents(in: .current, from: date)
+        //let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components.month, day: components.day, hour: components.hour, minute: components.minute)
+        let dateformatter = DateFormatter()
+        
+        dateformatter.dateStyle = DateFormatter.Style.medium
+        dateformatter.timeStyle = DateFormatter.Style.short
+        
+        let dateValue = dateformatter.string(from: date)
+        
+        if(nextWorkout.date > Date()) {
+            //isSet = true
+        }
+        
+        //dateLabel.text = dateValue
+        nextSetWorkout.text = "\(dateValue)"
+        
+        if(nextWorkout.date <= Date()) {
+            nextSetWorkout.text = "No Workout Set!"
+            //isSet = false
+        }
+        print("Set the label")
+    }
+    
 }
 
