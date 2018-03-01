@@ -9,7 +9,7 @@
 import UIKit
 import UserNotifications
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     
     struct Notification {
         
@@ -44,38 +44,40 @@ class ViewController: UIViewController {
         }
         // Do any additional setup after loading the view, typically from a nib.
  
-        //configureUserNotificationCenter()
+        configureUserNotificationCenter()
         // set this up so user selects image from their library (ie. profile picture)
         mainImage.image = UIImage(named: "success")
         //print(Date())
         
     }
-    /*
+    
     private func configureUserNotificationCenter() {
-        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         
-        let actionReadLater = UNNotificationAction(identifier: Notification.Action.readLater, title: "Read Later", options: [])
+        let actionReadLater = UNNotificationAction(identifier: Notification.Action.readLater, title: "Get My Pump Up On!", options: [])
         
         let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.tutorial, actions: [actionReadLater], intentIdentifiers: [], options: [])
         
         UNUserNotificationCenter.current().setNotificationCategories([tutorialCategory])
         
     }
-    */
-    /*
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didRecieve response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
+    
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+ 
         switch response.actionIdentifier {
             
         case Notification.Action.readLater:
             print("we are here after notification")
-        
+            
         default:
             print("Why am i here all day")
     
         }
+        completionHandler()
+        
     }
-*/
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -83,12 +85,16 @@ class ViewController: UIViewController {
 
     @IBAction func setWorkout() {
         
+        //let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let selectedDate = nextWorkout.date
         dateHasBeenSet(at: selectedDate)
+        //appDelegate.scheduleNotification(at: selectedDate)
         scheduleNotification(at: selectedDate)
-
+        //we need to call this when notification clicked
+        //appDelegate.loadWorkout()
+        
     }
-    
+   
     func scheduleNotification(at date: Date) {
         print("made it to the schedule method")
         let calendar = Calendar(identifier: .gregorian)
@@ -100,6 +106,7 @@ class ViewController: UIViewController {
         let content = UNMutableNotificationContent()
         content.title = "Hey its BSOUL!"
         content.body = "Its Time to Workout!"
+        content.categoryIdentifier = Notification.Category.tutorial
         //content.categoryIdentifier = Notification.Category.tutorial
         content.sound = UNNotificationSound.default()
         
@@ -112,7 +119,18 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+    /*
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        switch response.actionIdentifier {
+        case Notification.Action.readLater:
+            print("Save Tutorial For Later")
+        default:
+            print("Other Action")
+        }
+        
+        completionHandler()
+    }
+ */
     func dateHasBeenSet(at date: Date) {
         
         //let calendar = Calendar(identifier: .gregorian)
