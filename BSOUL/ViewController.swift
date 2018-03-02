@@ -8,8 +8,9 @@
 
 import UIKit
 import UserNotifications
+import os
 
-class ViewController: UIViewController, UNUserNotificationCenterDelegate {
+class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     
     struct Notification {
         
@@ -18,9 +19,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         }
         
         struct Action {
-            static let readLater = "readLater"
+            static let workout = "workout"
         }
     }
+
     
     //MARK: PROPERTIES
     
@@ -28,66 +30,73 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     @IBOutlet weak var nextWorkout: UIDatePicker!
     @IBOutlet weak var bsoulLevel: UILabel!
     @IBOutlet weak var bsoulProgress: UIProgressView!
-    //var isSet: Bool = false
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //assignbackground()
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "test2")!)
-        //self.view.backgroundColor = UIColor(imagePattern: UIImage(named: "fitness"))
-    
-        //if(nextWorkout.date <= Date()) {
-            //nextSetWorkout.text = "No Workout Set!"
-            //isSet = false
-        //}
         
         if (nextSetWorkout.text == "NULL") {
             nextSetWorkout.text = "No Workout Set!"
         }
         // Do any additional setup after loading the view, typically from a nib.
- 
         configureUserNotificationCenter()
-        // set this up so user selects image from their library (ie. profile picture)
-        //mainImage.image = UIImage(named: "fitness")
-        //print(Date())
         
+        //This is for development purposes
+        //resetGameData()
+        getXP()
     }
     
-    func assignbackground(){
-        let background = UIImage(named: "fitness")
+    //reset game to defaults
+    func resetGameData() {
         
-        var imageView : UIImageView!
-        imageView = UIImageView(frame: view.bounds)
-        imageView.contentMode =  UIViewContentMode.scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.image = background
-        imageView.center = view.center
-        view.addSubview(imageView)
-        self.view.sendSubview(toBack: imageView)
+        let defaults = UserDefaults.standard
+        let XP = 0
+        let level = 1
+        let XPneeded = 100
+        let oldCap = 0
+        defaults.set(XP, forKey: "XP")
+        defaults.set(level, forKey: "Level")
+        defaults.set(XPneeded, forKey: "XPneeded")
+        defaults.set(oldCap, forKey: "oldCap")
     }
+    
+    //set all xp values
+    func getXP() {
+
+        let defaults = UserDefaults.standard
+        let XP = defaults.integer(forKey: "XP")
+        let level = defaults.integer(forKey: "Level")
+        let XPneeded = defaults.integer(forKey: "XPneeded")
+        let oldCap = defaults.integer(forKey: "oldCap")
+        bsoulLevel.text = String(level)
+        bsoulProgress.progress = Float(Float(XP - oldCap) / Float(XPneeded))
+    }
+
+    //Sets up the notification action
     private func configureUserNotificationCenter() {
         UNUserNotificationCenter.current().delegate = self
         
-        let actionReadLater = UNNotificationAction(identifier: Notification.Action.readLater, title: "Get My Pump Up On!", options: UNNotificationActionOptions.foreground)
+        //action for notification
+        let actionWorkout = UNNotificationAction(identifier: Notification.Action.workout, title: "Get My Pump Up On!", options: UNNotificationActionOptions.foreground)
         
-        let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.tutorial, actions: [actionReadLater], intentIdentifiers: [], options: [])
+        let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.tutorial, actions: [actionWorkout], intentIdentifiers: [], options: [])
         
         UNUserNotificationCenter.current().setNotificationCategories([tutorialCategory])
         
     }
     
-    
+    // Gets called when notification is tapped
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
  
-        if (response.actionIdentifier == "readLater") {
-            print("You are correct, we selected the button")
+        if (response.actionIdentifier == "workout") {
+            //print("You are correct, we selected the button")
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.loadWorkout()
         } else {
             nextSetWorkout.text = "You Missed Your Workout!"
         }
         completionHandler()
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -96,17 +105,18 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
 
     @IBAction func setWorkout() {
-        
-        //let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
         let selectedDate = nextWorkout.date
-        dateHasBeenSet(at: selectedDate)
-        //appDelegate.scheduleNotification(at: selectedDate)
-        scheduleNotification(at: selectedDate)
-        //we need to call this when notification clicked
-        //appDelegate.loadWorkout()
-        
+        if (selectedDate > Date()) {
+            
+            dateHasBeenSet(at: selectedDate)
+            scheduleNotification(at: selectedDate)
+        } else {
+            nextSetWorkout.text = "Cant Set a Workout in The Past!"
+        }
     }
    
+    // Build notification and request it
     func scheduleNotification(at date: Date) {
         print("made it to the schedule method")
         let calendar = Calendar(identifier: .gregorian)
@@ -118,9 +128,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         let content = UNMutableNotificationContent()
         content.title = "Hey its BSOUL!"
         content.body = "Its Time to Workout!"
-        //content.body = "Just wanted to say Brian sucks and Josh is better"
         content.categoryIdentifier = Notification.Category.tutorial
-        //content.categoryIdentifier = Notification.Category.tutorial
         content.sound = UNNotificationSound.default()
         
         let request = UNNotificationRequest(identifier: "textNotification", content: content, trigger: trigger)
@@ -132,43 +140,25 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             }
         }
     }
-    /*
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        switch response.actionIdentifier {
-        case Notification.Action.readLater:
-            print("Save Tutorial For Later")
-        default:
-            print("Other Action")
-        }
-        
-        completionHandler()
-    }
- */
+
+    // Updates the label to display set workout date
     func dateHasBeenSet(at date: Date) {
-        
-        //let calendar = Calendar(identifier: .gregorian)
-        //let components = calendar.dateComponents(in: .current, from: date)
-        //let newComponents = DateComponents(calendar: calendar, timeZone: .current, month: components.month, day: components.day, hour: components.hour, minute: components.minute)
+
         let dateformatter = DateFormatter()
         
         dateformatter.dateStyle = DateFormatter.Style.medium
         dateformatter.timeStyle = DateFormatter.Style.short
         
         let dateValue = dateformatter.string(from: date)
-        
-        if(nextWorkout.date > Date()) {
-            //isSet = true
-        }
-        
-        //dateLabel.text = dateValue
+
         nextSetWorkout.text = "\(dateValue)"
         
         if(nextWorkout.date <= Date()) {
             nextSetWorkout.text = "No Workout Set!"
-            //isSet = false
         }
-        print("Set the label")
+        //print("Set the label")
     }
     
+
 }
 

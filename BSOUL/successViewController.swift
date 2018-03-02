@@ -16,8 +16,28 @@ class successViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "background")!)
         successImage.image = UIImage(named: "success")
+        
+        let defaults = UserDefaults.standard
+        var XP = defaults.integer(forKey: "XP")
+        var level = defaults.integer(forKey: "Level")
+        var XPneeded = defaults.integer(forKey: "XPneeded")
+        var oldCap = defaults.integer(forKey: "oldCap")
+        XP = XP + 50
+        
+        if (XP >= XPneeded) {
+            
+            level += 1
+            let extraXP = (level - 1) * 50
+            oldCap = XPneeded
+            XPneeded = (level * 100) + extraXP
+            
+            defaults.set(level, forKey: "Level")
+            defaults.set(XPneeded, forKey: "XPneeded")
+            defaults.set(oldCap, forKey: "oldCap")
+        }
+        defaults.set(XP, forKey: "XP")
         // Do any additional setup after loading the view.
     }
 
