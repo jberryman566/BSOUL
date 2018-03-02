@@ -9,7 +9,7 @@
 import UIKit
 import UserNotifications
 
-class ViewController: UIViewController, UNUserNotificationCenterDelegate{
+class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     struct Notification {
         
@@ -26,14 +26,16 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     
     @IBOutlet weak var nextSetWorkout: UILabel!
     @IBOutlet weak var nextWorkout: UIDatePicker!
-    @IBOutlet weak var mainImage: UIImageView!
     @IBOutlet weak var bsoulLevel: UILabel!
     @IBOutlet weak var bsoulProgress: UIProgressView!
     //var isSet: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //assignbackground()
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "test2")!)
+        //self.view.backgroundColor = UIColor(imagePattern: UIImage(named: "fitness"))
+    
         //if(nextWorkout.date <= Date()) {
             //nextSetWorkout.text = "No Workout Set!"
             //isSet = false
@@ -46,15 +48,27 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
  
         configureUserNotificationCenter()
         // set this up so user selects image from their library (ie. profile picture)
-        mainImage.image = UIImage(named: "success")
+        //mainImage.image = UIImage(named: "fitness")
         //print(Date())
         
     }
     
-    private func configureUserNotificationCenter() {
-        UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    func assignbackground(){
+        let background = UIImage(named: "fitness")
         
-        let actionReadLater = UNNotificationAction(identifier: Notification.Action.readLater, title: "Get My Pump Up On!", options: [])
+        var imageView : UIImageView!
+        imageView = UIImageView(frame: view.bounds)
+        imageView.contentMode =  UIViewContentMode.scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.image = background
+        imageView.center = view.center
+        view.addSubview(imageView)
+        self.view.sendSubview(toBack: imageView)
+    }
+    private func configureUserNotificationCenter() {
+        UNUserNotificationCenter.current().delegate = self
+        
+        let actionReadLater = UNNotificationAction(identifier: Notification.Action.readLater, title: "Get My Pump Up On!", options: UNNotificationActionOptions.foreground)
         
         let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.tutorial, actions: [actionReadLater], intentIdentifiers: [], options: [])
         
@@ -65,14 +79,12 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
  
-        switch response.actionIdentifier {
-            
-        case Notification.Action.readLater:
-            print("we are here after notification")
-            
-        default:
-            print("Why am i here all day")
-    
+        if (response.actionIdentifier == "readLater") {
+            print("You are correct, we selected the button")
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.loadWorkout()
+        } else {
+            nextSetWorkout.text = "You Missed Your Workout!"
         }
         completionHandler()
         
@@ -106,6 +118,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         let content = UNMutableNotificationContent()
         content.title = "Hey its BSOUL!"
         content.body = "Its Time to Workout!"
+        //content.body = "Just wanted to say Brian sucks and Josh is better"
         content.categoryIdentifier = Notification.Category.tutorial
         //content.categoryIdentifier = Notification.Category.tutorial
         content.sound = UNNotificationSound.default()

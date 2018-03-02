@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
     }
-    
+    /*
     func scheduleNotification(at date: Date) {
         print("made it to the schedule method")
         let calendar = Calendar(identifier: .gregorian)
@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+ */
     /*
     private func application(_ application: UIApplication, didRecieveLocalNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult)) {
         
