@@ -15,7 +15,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     struct Notification {
         
         struct Category {
-            static let tutorial = "tutorial"
+            static let notification = "notification"
         }
         
         struct Action {
@@ -80,7 +80,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         //action for notification
         let actionWorkout = UNNotificationAction(identifier: Notification.Action.workout, title: "Get My Pump Up On!", options: UNNotificationActionOptions.foreground)
         
-        let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.tutorial, actions: [actionWorkout], intentIdentifiers: [], options: [])
+        let tutorialCategory = UNNotificationCategory(identifier: Notification.Category.notification, actions: [actionWorkout], intentIdentifiers: [], options: [])
         
         UNUserNotificationCenter.current().setNotificationCategories([tutorialCategory])
         
@@ -88,7 +88,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     
     // Gets called when notification is tapped
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
- 
+        
+        print("whyyyyyyy")
         if (response.actionIdentifier == "workout") {
             //print("You are correct, we selected the button")
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -97,6 +98,11 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
             nextSetWorkout.text = "You Missed Your Workout!"
         }
         completionHandler()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        completionHandler([.alert, .sound])
     }
 
     override func didReceiveMemoryWarning() {
@@ -128,7 +134,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         let content = UNMutableNotificationContent()
         content.title = "Hey its BSOUL!"
         content.body = "Its Time to Workout!"
-        content.categoryIdentifier = Notification.Category.tutorial
+        content.categoryIdentifier = Notification.Category.notification
         content.sound = UNNotificationSound.default()
         
         let request = UNNotificationRequest(identifier: "textNotification", content: content, trigger: trigger)
@@ -139,6 +145,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
                 print("Uh oh! We had an error: \(error)")
             }
         }
+        print("workout has been set")
     }
 
     // Updates the label to display set workout date
@@ -156,7 +163,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         if(nextWorkout.date <= Date()) {
             nextSetWorkout.text = "No Workout Set!"
         }
-        //print("Set the label")
+        print("Set the label")
     }
     
 

@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (granted, error) in print("granted: (\(granted)")}
+        
         let defaults = UserDefaults.standard
         let defaultValue = ["XP" : 0, "Level" : 1, "XPneeded" : 100, "oldCap" : 0]
         defaults.register(defaults: defaultValue)
