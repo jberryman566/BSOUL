@@ -42,8 +42,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         // Do any additional setup after loading the view, typically from a nib.
         configureUserNotificationCenter()
         
-        //This is for development purposes
+        //This is for development purposes to reset data
         //resetGameData()
+        
+        //retrieve saved data
         getXP()
     }
     
@@ -88,8 +90,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
     
     // Gets called when notification is tapped
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
-        print("whyyyyyyy")
+
         if (response.actionIdentifier == "workout") {
             //print("You are correct, we selected the button")
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -100,6 +101,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         completionHandler()
     }
     
+    //Gets called when app is open and recieves notification
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         completionHandler([.alert, .sound])
@@ -110,6 +112,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         // Dispose of any resources that can be recreated.
     }
 
+    // set the label with next workout
     @IBAction func setWorkout() {
 
         let selectedDate = nextWorkout.date
@@ -145,7 +148,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
                 print("Uh oh! We had an error: \(error)")
             }
         }
-        print("workout has been set")
     }
 
     // Updates the label to display set workout date
@@ -163,7 +165,6 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate{
         if(nextWorkout.date <= Date()) {
             nextSetWorkout.text = "No Workout Set!"
         }
-        print("Set the label")
     }
     
 

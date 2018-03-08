@@ -17,8 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
+        //Get notification Permission
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (granted, error) in print("granted: (\(granted)")}
         
+        //defaults for saving game data
         let defaults = UserDefaults.standard
         let defaultValue = ["XP" : 0, "Level" : 1, "XPneeded" : 100, "oldCap" : 0]
         defaults.register(defaults: defaultValue)
@@ -29,14 +31,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Sets up our workout view
     func loadWorkout() {
         
-        //print("Called app delegate.loadWorkout")
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let appVC = storyBoard.instantiateViewController(withIdentifier: "WorkoutViewController")
         let navigationController = UINavigationController.init(rootViewController: appVC)
         self.window?.rootViewController = navigationController
         self.window?.makeKeyAndVisible()
-        
-        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -63,7 +62,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-
